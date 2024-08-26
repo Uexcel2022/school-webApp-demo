@@ -4,12 +4,10 @@ import com.uexcel.eazy_school.model.Contact;
 import com.uexcel.eazy_school.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 @Slf4j
@@ -23,16 +21,17 @@ public class ContactController {
     }
 
     @RequestMapping("/contact")
-    public String displayContactPage(Model model){
+    public String displayContactPage(Model model,@RequestParam(required = false) boolean success){
         model.addAttribute("contact", new Contact());
+        model.addAttribute("success", success);
         return "contact";
     }
 
     @RequestMapping( value = "/saveMsg",method = RequestMethod.POST)
-    public ModelAndView saveMessage(@Valid @ModelAttribute Contact contact,
-                                    BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("{}",bindingResult.getAllErrors());
+    public ModelAndView saveMessage(@Valid @ModelAttribute("contact") Contact contact,
+                                    Errors errors){
+        if(errors.hasErrors()){
+            log.info("{}",errors.getAllErrors());
             return new ModelAndView("contact");
         }
         boolean isSave = contactService.saveMessage(contact);
