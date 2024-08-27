@@ -1,10 +1,12 @@
 package com.uexcel.eazy_school.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +21,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg"))
+        http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg")
+                        .ignoringRequestMatchers(PathRequest.toH2Console()))
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
                         .requestMatchers("/dashboard").authenticated()
@@ -31,7 +34,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
-
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(fl->fl.loginPage("/login")
@@ -40,8 +43,9 @@ public class SecurityConfiguration {
                 )
                    //commented because logout method has be implemented
 //                .logout(lo->lo.logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll())
+                .httpBasic(Customizer.withDefaults())
+                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
-                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

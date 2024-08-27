@@ -1,9 +1,7 @@
 package com.uexcel.eazy_school.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,11 +10,14 @@ import org.springframework.web.context.annotation.ApplicationScope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.context.annotation.SessionScope;
 
-@Setter @Getter @ToString
+import java.time.LocalDateTime;
+
+@Data
 //@RequestScope
 //@SessionScope
 //@ApplicationScope
-public class Contact {
+public class Contact extends BaseEntity {
+    private Long id;
     @Pattern(regexp = "[A-Za-z]{2,}[a-zA-z ]{2,30}",
             message = "Name should be at least 2 or at most 30 alphabet characters long.")
     private String name;
@@ -30,4 +31,7 @@ public class Contact {
     @Pattern(regexp = "[a-zA-Z ,?.'$%0-9-]{10,100}",
             message = "Message should be at least 10 or at most 100 characters long.")
     private String message;
+
+    private String status;
+
 }
