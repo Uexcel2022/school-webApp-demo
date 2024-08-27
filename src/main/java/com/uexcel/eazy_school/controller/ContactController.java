@@ -2,6 +2,7 @@ package com.uexcel.eazy_school.controller;
 
 import com.uexcel.eazy_school.model.Contact;
 import com.uexcel.eazy_school.service.ContactService;
+
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,4 +38,6 @@ public class ContactController {
         boolean isSave = contactService.saveMessage(contact);
         return new ModelAndView("redirect:/contact");
     }
+
+
 }

@@ -1,17 +1,14 @@
 package com.uexcel.eazy_school.controller;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@SessionAttributes({"username","authorities"})
 public class AuthenticationController {
     @RequestMapping(value = "/login",method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLogin(
@@ -20,7 +17,7 @@ public class AuthenticationController {
                          Model model){
         String msg = null;
         if(error){
-            msg = "Bad login credentials.";
+            msg = "Bad credentials.";
         }
         if(logout){
             msg = "You have logged out successfully.";
@@ -30,13 +27,12 @@ public class AuthenticationController {
     }
 
     @RequestMapping("/dashboard")
-    public String displayDashboard(Model model, Authentication auth){
-        log.info("user:{}",auth);
-        String username = auth.getName();
-        String authorities = auth.getAuthorities().toString();
-        model.addAttribute("username",username);
-        model.addAttribute("authorities",authorities);
+    public String displayDashboard(Authentication auth, Model user){
+        user.addAttribute("username",auth.getName());
+        user.addAttribute("authorities",auth.getAuthorities());
         return "dashboard";
     }
+
+
 
 }

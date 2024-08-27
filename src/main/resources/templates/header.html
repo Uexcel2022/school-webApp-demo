@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>header</title>
@@ -21,24 +22,28 @@
                     <li class="nav-item">
                         <a th:href="@{/home}" class="nav-link active" aria-current="page">Home</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="isAnonymous()">
                         <a th:href="@{/about}" class="nav-link">About</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="isAnonymous()">
                         <a th:href="@{/courses}" class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/holidays}" class="nav-link">Holidays</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="isAnonymous()">
                         <a th:href="@{/contact}" class="nav-link">Contact</a>
                     </li>
-                    <li class="nav-item">
-                        <a th:if="${username==null}" th:href="@{/login}" class="nav-link">Login</a>
-                        <a th:if="${username!=null}" th:href="@{/logout}" class="nav-link">Logout</a>
+                    <li class="nav-item" sec:authorize="isAnonymous()" >
+                        <a th:href="@{/login}" class="nav-link">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a th:if="${username!=null}" th:href="@{/dashboard}" class="nav-link">DashBoard</a>
+
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="nav-link">Logout</a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a th:href="@{/dashboard}" class="nav-link">DashBoard</a>
                     </li>
                 </ul>
             </div>
