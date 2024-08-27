@@ -10,7 +10,7 @@ public class GlobalExceptionController {
     public ModelAndView exceptionHandler(Exception e) {
         ModelAndView errorPage = new ModelAndView();
         errorPage.setViewName("error");
-        errorPage.addObject("msg", e.getMessage());
+        errorPage.addObject("errorMsg", e.getMessage());
         return errorPage;
     }
 }
