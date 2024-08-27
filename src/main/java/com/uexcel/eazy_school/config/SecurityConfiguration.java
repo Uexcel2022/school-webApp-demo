@@ -19,7 +19,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg"))
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
                         .requestMatchers("/dashboard").authenticated()
@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/holidays").permitAll()
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/logout").permitAll()
 
                         .anyRequest().authenticated())
 
@@ -37,7 +38,9 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/dashboard",true)
                         .failureUrl("/login?error=true").permitAll()
                 )
-                .logout(lo->lo.logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll())
+                   //commented because logout method has be implemented
+//                .logout(lo->lo.logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll())
+
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();

@@ -25,8 +25,7 @@ public class ContactController {
     public String displayContactPage(Model model,@RequestParam(required = false) boolean success){
         model.addAttribute("contact", new Contact());
         model.addAttribute("success", success);
-        throw  new RuntimeException(" Error saving contact!");
-//        return "contact";
+        return "contact";
     }
 
     @RequestMapping( value = "/saveMsg",method = RequestMethod.POST)

@@ -45,17 +45,25 @@ Author URL: http://w3layouts.com
         </div>
         <div class="row login-block">
             <div class="col-md-6 login-center">
-                <form action="/login" method="post" class="signin-form">
+                <form th:action="@{/login}" method="post" class="signin-form">
                     <div class="col-md-8 login-center input-grids">
-                        <div class="alert alert-danger" role="alert" th:if="${!#strings.isEmpty(msg) && !msg.contains('successfully')}"
-                            th:text="${msg}" />
-                        <div class="alert alert-info" role="alert" th:if="${!#strings.isEmpty(msg) && msg.contains('successfully')}"
-                             th:text="${msg}" />
+
+                        <div class="alert alert-danger" role="alert"
+                             th:if="${!#strings.isEmpty(msg) && !msg.contains('successfully')}" th:text="${msg}"/>
+
+                        <div class="alert alert-info" role="alert"
+                             th:if="${!#strings.isEmpty(msg) && msg.contains('successfully')}" th:text="${msg}"/>
+
                         <input type="text" name="username" id="username" placeholder="Username"
                                class="login-input" />
+
                         <input type="password" name="password" id="password" placeholder="Password"
                                class="login-input" />
+
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
                     </div>
+
                     <div class="col-md-8 login-center text-start">
                         <button class="btn btn-style btn-style-3 text-left">Log In</button>
                         <a class="new-user text-right" href="">New User ?</a>
