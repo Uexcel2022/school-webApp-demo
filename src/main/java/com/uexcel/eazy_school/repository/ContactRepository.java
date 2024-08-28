@@ -1,8 +1,13 @@
 package com.uexcel.eazy_school.repository;
 
+import com.uexcel.eazy_school.constants.EazySchoolConstants;
 import com.uexcel.eazy_school.model.Contact;
+import com.uexcel.eazy_school.rowmapper.ContactRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class ContactRepository {
@@ -20,5 +25,16 @@ public class ContactRepository {
                 contact.getStatus(), contact.getCreatedAt(),
                 contact.getCreatedBy()
         );
+    }
+
+    public List<Contact> findContactMsgWithOpenStatus(String open) {
+        String sql = "SELECT * FROM CONTACT_MSG WHERE STATUS = ?";
+        return jdbcTemplate.query(sql, new ContactRowMapper(), open);
+    }
+
+    public int updateMessageStatus(int id, String status, String updatedBy) {
+        LocalDateTime time = LocalDateTime.now();
+        String sql = "UPDATE CONTACT_MSG SET STATUS = ?, UPDATED_AT= ?, UPDATED_BY = ? WHERE ID = ?";
+        return jdbcTemplate.update(sql, status, time, updatedBy, id);
     }
 }

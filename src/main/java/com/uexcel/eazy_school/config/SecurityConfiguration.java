@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,10 +20,14 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg")
                         .ignoringRequestMatchers(PathRequest.toH2Console()))
+
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
+                        .requestMatchers("/displayMessages").hasAuthority("ADMIN")
+                        .requestMatchers("/closeMsg/**").hasAuthority("ADMIN")
                         .requestMatchers("/dashboard").authenticated()
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/contact").permitAll()
@@ -43,6 +46,7 @@ public class SecurityConfiguration {
                 )
                    //commented because logout method has be implemented
 //                .logout(lo->lo.logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll())
+
                 .httpBasic(Customizer.withDefaults())
                 .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 

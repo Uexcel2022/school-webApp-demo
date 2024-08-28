@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Slf4j
@@ -19,14 +20,21 @@ public class ContactService {
     }
 
     public boolean saveMessage(Contact contact) {
-        boolean isSaved = false;
         contact.setStatus(EazySchoolConstants.OPEN);
         contact.setCreatedBy(EazySchoolConstants.ANONYMOUS);
         contact.setCreatedAt(LocalDateTime.now());
-          int result = contactRepository.saveContactMsg(contact);
-        if (result > 0) {
-            isSaved = true;
-        }
-        return isSaved;
+        int rs = contactRepository.saveContactMsg(contact);
+        return rs > 0;
+    }
+
+    public List<Contact> findContactMsgWithOpenStatus() {
+        return contactRepository
+                .findContactMsgWithOpenStatus(EazySchoolConstants.OPEN);
+    }
+
+    public boolean updateMessageStatus(int id, String updateBy) {
+       int rs =  contactRepository
+               .updateMessageStatus(id,EazySchoolConstants.CLOSE,updateBy);
+        return rs > 0;
     }
 }

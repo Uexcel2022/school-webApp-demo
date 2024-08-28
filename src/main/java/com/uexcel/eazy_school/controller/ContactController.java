@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
 @Slf4j
 @Controller
 public class ContactController {
@@ -36,9 +39,25 @@ public class ContactController {
             log.info("{}",errors.getAllErrors());
             return new ModelAndView("contact");
         }
+
         boolean isSave = contactService.saveMessage(contact);
         return new ModelAndView("redirect:/contact");
     }
 
+    @RequestMapping(value = "/displayMessages",method = RequestMethod.GET)
+    public ModelAndView getContactMessage(){
+        List<Contact> contactMsgList = contactService.findContactMsgWithOpenStatus();
+        return new ModelAndView("messages", "contactMsgList", contactMsgList);
+    }
+
+    @RequestMapping(value = "/closeMsg", method = RequestMethod.GET)
+    public String updateMessage(@RequestParam int id,Authentication auth){
+      boolean isUpdated = contactService.updateMessageStatus(id,auth.getName());
+
+      if(!isUpdated){
+          throw new RuntimeException("We encountered an error... couldn't close the contact message. Please try again.");
+      }
+        return "redirect:/displayMessages";
+    }
 
 }

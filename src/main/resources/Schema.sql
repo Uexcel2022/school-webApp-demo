@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS contact_msg (
     status varchar(10) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     created_by varchar(50) NOT NULL,
-    modified_at TIMESTAMP NULL,
-    modified_by varchar(50) NULL
+    updated_at TIMESTAMP NULL,
+    updated_by varchar(50) NULL
 );
