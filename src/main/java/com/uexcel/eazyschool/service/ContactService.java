@@ -1,8 +1,8 @@
-package com.uexcel.eazy_school.service;
+package com.uexcel.eazyschool.service;
 
-import com.uexcel.eazy_school.constants.EazySchoolConstants;
-import com.uexcel.eazy_school.model.Contact;
-import com.uexcel.eazy_school.repository.ContactRepository;
+import com.uexcel.eazyschool.constants.EazySchoolConstants;
+import com.uexcel.eazyschool.model.Contact;
+import com.uexcel.eazyschool.repository.ContactRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

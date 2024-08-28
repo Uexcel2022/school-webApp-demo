@@ -1,4 +1,4 @@
-package com.uexcel.eazy_school;
+package com.uexcel.eazyschool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.uexcel.eazy_school.constants;
+package com.uexcel.eazyschool.constants;
 
 public interface EazySchoolConstants {
     public static final String ANONYMOUS = "Anonymous";

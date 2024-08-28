@@ -1,16 +1,7 @@
-package com.uexcel.eazy_school.model;
+package com.uexcel.eazyschool.model;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.web.context.annotation.ApplicationScope;
-import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.context.annotation.SessionScope;
-
-import java.time.LocalDateTime;
 
 @Data
 //@RequestScope

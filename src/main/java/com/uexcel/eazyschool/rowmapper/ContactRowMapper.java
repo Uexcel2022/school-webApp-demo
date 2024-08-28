@@ -1,6 +1,6 @@
-package com.uexcel.eazy_school.rowmapper;
+package com.uexcel.eazyschool.rowmapper;
 
-import com.uexcel.eazy_school.model.Contact;
+import com.uexcel.eazyschool.model.Contact;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

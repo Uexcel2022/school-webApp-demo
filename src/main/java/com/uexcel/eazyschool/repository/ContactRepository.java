@@ -1,8 +1,7 @@
-package com.uexcel.eazy_school.repository;
+package com.uexcel.eazyschool.repository;
 
-import com.uexcel.eazy_school.constants.EazySchoolConstants;
-import com.uexcel.eazy_school.model.Contact;
-import com.uexcel.eazy_school.rowmapper.ContactRowMapper;
+import com.uexcel.eazyschool.model.Contact;
+import com.uexcel.eazyschool.rowmapper.ContactRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

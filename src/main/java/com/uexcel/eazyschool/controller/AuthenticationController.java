@@ -1,9 +1,10 @@
-package com.uexcel.eazy_school.controller;
+package com.uexcel.eazyschool.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
+@EnableAspectJAutoProxy
 public class AuthenticationController {
     @RequestMapping(value = "/login",method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLogin(

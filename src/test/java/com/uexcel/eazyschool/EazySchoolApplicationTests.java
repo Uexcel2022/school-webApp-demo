@@ -1,4 +1,4 @@
-package com.uexcel.eazy_school;
+package com.uexcel.eazyschool;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

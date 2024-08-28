@@ -1,4 +1,4 @@
-package com.uexcel.eazy_school.model;
+package com.uexcel.eazyschool.model;
 
 import lombok.Data;
 

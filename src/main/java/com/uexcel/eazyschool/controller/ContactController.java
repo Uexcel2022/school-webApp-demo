@@ -1,11 +1,12 @@
-package com.uexcel.eazy_school.controller;
+package com.uexcel.eazyschool.controller;
 
-import com.uexcel.eazy_school.model.Contact;
-import com.uexcel.eazy_school.service.ContactService;
+import com.uexcel.eazyschool.model.Contact;
+import com.uexcel.eazyschool.service.ContactService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@EnableAspectJAutoProxy
 public class ContactController {
     private final ContactService contactService;
 
