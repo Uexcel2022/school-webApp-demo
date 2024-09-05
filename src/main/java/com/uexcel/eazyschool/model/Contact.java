@@ -1,13 +1,20 @@
 package com.uexcel.eazyschool.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 //@RequestScope
 //@SessionScope
 //@ApplicationScope
+@Entity
+@Table(name="contact_msg")
 public class Contact extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Pattern(regexp = "[A-Za-z]{2,}[a-zA-z ]{2,30}",
             message = "Name should be at least 2 or at most 30 alphabet characters long.")

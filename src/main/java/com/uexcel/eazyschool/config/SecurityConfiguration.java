@@ -22,7 +22,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg")
-                        .ignoringRequestMatchers(PathRequest.toH2Console()))
+//                        .ignoringRequestMatchers(PathRequest.toH2Console())
+                )
 
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
@@ -37,7 +38,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(fl->fl.loginPage("/login")
@@ -47,8 +48,8 @@ public class SecurityConfiguration {
                    //commented because logout method has be implemented
 //                .logout(lo->lo.logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll())
 
-                .httpBasic(Customizer.withDefaults())
-                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                .httpBasic(Customizer.withDefaults());
+//                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
 
         return http.build();

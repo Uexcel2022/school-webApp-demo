@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+//@Repository
 public class ContactRepository {
     private  final JdbcTemplate jdbcTemplate;
 

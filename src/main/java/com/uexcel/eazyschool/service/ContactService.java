@@ -4,14 +4,13 @@ import com.uexcel.eazyschool.constants.EazySchoolConstants;
 import com.uexcel.eazyschool.model.Contact;
 import com.uexcel.eazyschool.repository.ContactRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Slf4j
-@Service
+//@Service
 public class ContactService {
     private final ContactRepository contactRepository;
 
