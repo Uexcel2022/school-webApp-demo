@@ -38,13 +38,16 @@ public class ContactJpaController {
 
     @RequestMapping( value = "/saveMsg",method = RequestMethod.POST)
     public ModelAndView saveMessage(@Valid @ModelAttribute("contact") Contact contact,
-                                    Errors errors, Authentication authentication){
+                                    Errors errors){
         if(errors.hasErrors()){
             log.info("{}",errors.getAllErrors());
             return new ModelAndView("contact");
         }
+       Contact ct =  contactjpaService.saveMessage(contact);
 
-        contactjpaService.saveMessage(contact,authentication);
+        if(null != ct && ct.getId()<=0){
+            throw  new RuntimeException("Message save failed.");
+        }
         return new ModelAndView("redirect:/contact");
     }
 
@@ -55,8 +58,8 @@ public class ContactJpaController {
     }
 
     @RequestMapping(value = "/closeMsg", method = RequestMethod.GET)
-    public String updateMessage(@RequestParam Long id,Authentication auth){
-      contactjpaService.updateMessageStatus(id,auth.getName());
+    public String updateMessage(@RequestParam Long id){
+      contactjpaService.updateMessageStatus(id);
         return "redirect:/displayMessages";
     }
 

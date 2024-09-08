@@ -22,6 +22,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg")
+                                .ignoringRequestMatchers("/public/**")
 //                        .ignoringRequestMatchers(PathRequest.toH2Console())
                 )
 
@@ -36,6 +37,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/saveMsg").permitAll()
                         .requestMatchers("/holidays").permitAll()
                         .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
 //                        .requestMatchers(PathRequest.toH2Console()).permitAll()

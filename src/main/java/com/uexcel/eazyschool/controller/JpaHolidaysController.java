@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Controller
 @EnableAspectJAutoProxy
@@ -29,13 +33,13 @@ public class JpaHolidaysController {
 
     @RequestMapping(value = "holidays", method = RequestMethod.GET)
     public String displayHolidays(Model model){
-
-        List<Holiday> holidays = holidayJpaRepository.findAll();
-
+        Iterable<Holiday> holidays = holidayJpaRepository.findAll();
+        List<Holiday> holidayList =
+                StreamSupport.stream(holidays.spliterator(),false).toList();
 
         Holiday.Type[] types = Holiday.Type.values();
         for(Holiday.Type type : types) {
-            model.addAttribute(type.toString(), holidays.stream()
+            model.addAttribute(type.toString(), holidayList.stream()
                     .filter(el -> el.getType().equals(type)).toList());
         }
 

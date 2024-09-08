@@ -21,27 +21,19 @@ public class ContactJpaService {
     }
 
 
-    public void saveMessage(Contact contact, Authentication auth) {
-        if (auth != null) {
-            contact.setCreatedBy(auth.getName());
-        } else {
-            contact.setCreatedBy(EazySchoolConstants.ANONYMOUS);
-        }
+    public Contact saveMessage(Contact contact) {
         contact.setStatus(EazySchoolConstants.OPEN);
-        contact.setCreatedAt(LocalDateTime.now());
-        contactJpaRepository.save(contact);
+       return contactJpaRepository.save(contact);
     }
 
     public List<Contact> findContactMsgWithOpenStatus() {
         return contactJpaRepository.findContactByStatus(EazySchoolConstants.OPEN);
     }
 
-    public void updateMessageStatus(Long id, String updateBy) {
+    public void updateMessageStatus(Long id) {
         Contact toUpdate = contactJpaRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Not message found"));
         toUpdate.setStatus(EazySchoolConstants.CLOSE);
-        toUpdate.setCreatedBy(updateBy);
-        toUpdate.setUpdatedAt(LocalDateTime.now());
         contactJpaRepository.save(toUpdate);
     }
 }
