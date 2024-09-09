@@ -1,14 +1,48 @@
 package com.uexcel.eazyschool.model;
 
+import com.uexcel.eazyschool.annotation.FieldsValueMatch;
+import com.uexcel.eazyschool.annotation.PasswordValidator;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Transient;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Person {
-    private int id;
+@Entity
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "pwd",
+                fieldMatch = "confirmPwd",
+                message = "Password do not match!"
+        ),
+        @FieldsValueMatch(field = "email",
+                fieldMatch = "confirmEmail",
+                message = "Email address do not match!")
+})
+public class Person extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Pattern(regexp = "[a-zA-Z]{3,}[A-Za-z ]*")
     private String name;
+
+    @Email
     private String email;
+    @Transient  //it indicates to spring to ignore filed for jpa operations
     private String confirmEmail;
+
+    @Pattern(regexp = "(\\+234[7-9]|0[7-9])[01][0-9]{8}",message = "Invalid phone Nigeria number!")
     private String mobileNumber;
+
+
+    @Size(min = 6, max = 16, message = "Password should be up 6 - 16 characters!")
+    @PasswordValidator
     private String pwd;
+    @Transient           //it indicates to spring to ignore filed for jpa operations
     private String confirmPwd;
 }

@@ -19,6 +19,7 @@ public class AuthenticationController {
     public String displayLogin(
             @RequestParam(value = "error",required = false) boolean error,
             @RequestParam(value = "logout",required = false) boolean logout,
+            @RequestParam(value = "register",required = false) boolean register,
                          Model model){
         String msg = null;
         if(error){
@@ -26,6 +27,10 @@ public class AuthenticationController {
         }
         if(logout){
             msg = "You have logged out successfully.";
+        }
+        if(register){
+            msg = "Registered successfully." +
+                    "\nLogin please!!";
         }
         model.addAttribute("msg",msg);
         return "login";
