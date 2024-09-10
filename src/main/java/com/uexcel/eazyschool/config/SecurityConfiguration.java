@@ -57,7 +57,7 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
+//    @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         return new InMemoryUserDetailsManager(
                 buildUser("admin","1234",new String[]{"USER","ADMIN"} ),
@@ -65,7 +65,7 @@ public class SecurityConfiguration {
         );
     }
 
-    @Bean
+//    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }

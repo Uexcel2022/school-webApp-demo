@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.Transient;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,6 +32,7 @@ public class Person extends BaseEntity{
 
     @Email
     private String email;
+
     @Transient  //it indicates to spring to ignore filed for jpa operations
     private String confirmEmail;
 
@@ -43,6 +43,18 @@ public class Person extends BaseEntity{
     @Size(min = 6, max = 16, message = "Password should be up 6 - 16 characters!")
     @PasswordValidator
     private String pwd;
+
     @Transient           //it indicates to spring to ignore filed for jpa operations
     private String confirmPwd;
+
+    @OneToOne( fetch = FetchType.EAGER,cascade = CascadeType.PERSIST,targetEntity = Roles.class)
+    @JoinColumn(name = "role_id", referencedColumnName ="id",nullable = false )
+    private Roles roles;
+
+    @OneToOne( fetch = FetchType.EAGER,cascade = CascadeType.PERSIST,targetEntity = Address.class)
+    @JoinColumn(name = "address_id", referencedColumnName ="id")
+    private Address address;
+
+
+
 }
