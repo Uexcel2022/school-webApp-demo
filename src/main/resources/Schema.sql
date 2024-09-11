@@ -66,3 +66,16 @@ CREATE TABLE IF NOT EXISTS `roles`(
 
 INSERT INTO eazyschool.person (`name`, mobile_number, email, pwd, role_id, created_at, created_by)
 VALUES ('Udoka', '07081023546','uexcel@gmail.com','jvman19#', 1 ,CURDATE(),'uexcel');
+
+CREATE TABLE IF NOT EXISTS `class`(
+                                      id bigint AUTO_INCREMENT PRIMARY KEY,
+                                      `name` varchar(50) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL,
+    `created_by` varchar(50) NOT NULL,
+    `updated_at` TIMESTAMP DEFAULT NULL,
+    `updated_by` varchar(50) DEFAULT NULL
+    );
+
+alter table eazyschool.person
+    add column `class_id` bigint null after address_id,
+add constraint `fk_class_id` foreign key(`class_id`) references `class`(id)

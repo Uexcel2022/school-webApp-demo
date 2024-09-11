@@ -55,6 +55,9 @@ public class Person extends BaseEntity{
     @JoinColumn(name = "address_id", referencedColumnName ="id")
     private Address address;
 
+    @ManyToOne(fetch = FetchType.LAZY,optional = true)
+    @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = true )
+    private SchoolClass schoolClass;
 
 
 }
