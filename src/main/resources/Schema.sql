@@ -64,4 +64,5 @@ CREATE TABLE IF NOT EXISTS `roles`(
     );
 
 
-
+INSERT INTO eazyschool.person (`name`, mobile_number, email, pwd, role_id, created_at, created_by)
+VALUES ('Udoka', '07081023546','uexcel@gmail.com','jvman19#', 1 ,CURDATE(),'uexcel');

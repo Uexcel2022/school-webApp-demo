@@ -40,7 +40,7 @@ public class Person extends BaseEntity{
     private String mobileNumber;
 
 
-    @Size(min = 6, max = 16, message = "Password should be up 6 - 16 characters!")
+    @Size(min = 6, message = "Password should be up to 6 characters!")
     @PasswordValidator
     private String pwd;
 

@@ -2,6 +2,7 @@ package com.uexcel.eazyschool.authentication;
 
 import com.uexcel.eazyschool.model.Person;
 import com.uexcel.eazyschool.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,9 +18,12 @@ import java.util.List;
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
     private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsernamePasswordAuthenticationProvider(PersonRepository personRepository) {
+    @Autowired
+    public UsernamePasswordAuthenticationProvider(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -29,15 +34,15 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
             throw new BadCredentialsException("Bad credentials!");
         }
 
-        Person person = null;
+        Person person;
         if(username.contains("@")) {
             person = personRepository.findByEmail(username);
         } else{
             person = personRepository.findByMobileNumber(username);
         }
 
-        if(null != person && person.getId() > 0 && password.equals(person.getPwd())) {
-            return new UsernamePasswordAuthenticationToken(person.getName(), password,
+        if(null != person && person.getId() > 0 && passwordEncoder.matches(password,person.getPwd())) {
+            return new UsernamePasswordAuthenticationToken(person.getName(), null,
                     List.of(new GrantedAuthority[]{new SimpleGrantedAuthority(person.getRoles().getRoleName())}));
         }
         throw  new BadCredentialsException("Bad credentials!");

@@ -24,8 +24,14 @@ public class FieldsValueMatchValidator
                 .getPropertyValue(field);
         Object fieldMatchValue = new BeanWrapperImpl(value)
                 .getPropertyValue(fieldMatch);
+
         if (fieldValue != null) {
+//       commented because we add spring.jpa.properties.javax.persistence.validation.mode=none to disable jpa from doing doing validation
+//            if (value.toString().contains("$2a")) {
+//                return true;
+//            }
             return fieldValue.equals(fieldMatchValue);
+
         } else {
             return fieldMatchValue == null;
         }

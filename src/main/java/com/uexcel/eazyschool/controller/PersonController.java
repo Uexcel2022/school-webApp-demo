@@ -29,7 +29,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String savePerson(@Valid @ModelAttribute Person person, Errors errors) {
+    public String savePerson(@Valid @ModelAttribute("person") Person person, Errors errors) {
         if (errors.hasErrors()) {
             return "register";
         }
