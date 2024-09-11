@@ -1,9 +1,13 @@
 package com.uexcel.eazyschool.controller;
 
 
+import com.uexcel.eazyschool.model.Person;
+import com.uexcel.eazyschool.repository.PersonRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -15,6 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @EnableAspectJAutoProxy
 public class AuthenticationController {
+    private final PersonRepository personRepository;
+
+    @Autowired
+    public AuthenticationController(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
     @RequestMapping(value = "/login",method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLogin(
             @RequestParam(value = "error",required = false) boolean error,
@@ -37,9 +48,17 @@ public class AuthenticationController {
     }
 
     @RequestMapping("/dashboard")
-    public String displayDashboard(Authentication auth, Model user){
-        user.addAttribute("username",auth.getName());
-        user.addAttribute("authorities",auth.getAuthorities());
+    public String displayDashboard(Authentication auth, Model user, HttpSession httpSession){
+        String username = auth.getName();
+        Person person;
+        if(null != username && username.contains("@")) {
+            person = personRepository.findByEmail(username);
+        } else{
+            person = personRepository.findByMobileNumber(username);
+        }
+        user.addAttribute("username",person.getName());
+        user.addAttribute("authorities",person.getRoles().getRoleName());
+        httpSession.setAttribute("loggedInUser",person);
         return "dashboard";
     }
 

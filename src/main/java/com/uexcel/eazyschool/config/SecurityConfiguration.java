@@ -30,6 +30,8 @@ public class SecurityConfiguration {
                         .requestMatchers("**:8080","/","/home").permitAll()
                         .requestMatchers("/displayMessages").hasAuthority("ADMIN")
                         .requestMatchers("/closeMsg/**").hasAuthority("ADMIN")
+                        .requestMatchers("/displayProfile").authenticated()
+                        .requestMatchers("/updateProfile").authenticated()
                         .requestMatchers("/dashboard").authenticated()
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/contact").permitAll()

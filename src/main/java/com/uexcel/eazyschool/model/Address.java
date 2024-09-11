@@ -17,6 +17,6 @@ public class Address extends BaseEntity{
     private String address1;
     private String address2;
     private String city;
-    private String string;
+    private String state;
     private String zipCode;
 }

@@ -42,7 +42,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         }
 
         if(null != person && person.getId() > 0 && passwordEncoder.matches(password,person.getPwd())) {
-            return new UsernamePasswordAuthenticationToken(person.getName(), null,
+            return new UsernamePasswordAuthenticationToken(username, null,
                     List.of(new GrantedAuthority[]{new SimpleGrantedAuthority(person.getRoles().getRoleName())}));
         }
         throw  new BadCredentialsException("Bad credentials!");
