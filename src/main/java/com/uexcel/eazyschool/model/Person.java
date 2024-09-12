@@ -8,9 +8,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Setter @Getter
 @Entity
 @FieldsValueMatch.List({
         @FieldsValueMatch(
@@ -47,7 +49,7 @@ public class Person extends BaseEntity{
     @Transient           //it indicates to spring to ignore filed for jpa operations
     private String confirmPwd;
 
-    @OneToOne( fetch = FetchType.EAGER,cascade = CascadeType.PERSIST,targetEntity = Roles.class)
+    @OneToOne( fetch = FetchType.EAGER,targetEntity = Roles.class)
     @JoinColumn(name = "role_id", referencedColumnName ="id",nullable = false )
     private Roles roles;
 
