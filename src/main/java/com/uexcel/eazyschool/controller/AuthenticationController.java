@@ -48,9 +48,14 @@ public class AuthenticationController {
     }
 
     @RequestMapping("/dashboard")
-    public String displayDashboard(Authentication auth, Model user, HttpSession httpSession){
+    public String displayDashboard(Authentication auth, Model user, HttpSession session){
+
+        removeSessionAttributes(session,"classId");
+        removeSessionAttributes(session,"courseId");
+
         String username = auth.getName();
         Person person;
+
         if(null != username && username.contains("@")) {
             person = personRepository.findByEmail(username);
         } else{
@@ -58,7 +63,8 @@ public class AuthenticationController {
         }
         user.addAttribute("username",person.getName());
         user.addAttribute("authorities",person.getRoles().getRoleName());
-        httpSession.setAttribute("loggedInUser",person);
+        user.addAttribute("studentClass",person.getSchoolClass().getName());
+        session.setAttribute("loggedInUser",person);
         return "dashboard";
     }
 
@@ -71,5 +77,9 @@ public class AuthenticationController {
     }
 
 
-
+    private void removeSessionAttributes(HttpSession session,String name){
+        if(session.getAttribute(name) != null) {
+            session.removeAttribute(name);
+        }
+    }
 }

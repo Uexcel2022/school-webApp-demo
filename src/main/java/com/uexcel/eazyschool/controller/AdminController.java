@@ -1,20 +1,20 @@
 package com.uexcel.eazyschool.controller;
 
+import com.uexcel.eazyschool.model.Courses;
 import com.uexcel.eazyschool.model.Person;
 import com.uexcel.eazyschool.model.PersonClass;
 import com.uexcel.eazyschool.model.SchoolClass;
+import com.uexcel.eazyschool.repository.CoursesRepository;
 import com.uexcel.eazyschool.repository.PersonRepository;
 import com.uexcel.eazyschool.repository.SchoolClassRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,20 +23,22 @@ import java.util.Set;
 public class AdminController {
     private final SchoolClassRepository schoolClassRepository;
     private final PersonRepository personRepository;
+    private final CoursesRepository coursesRepository;
 
     @Autowired
-    public AdminController(SchoolClassRepository schoolClassRepository, PersonRepository personRepository) {
+    public AdminController(SchoolClassRepository schoolClassRepository, PersonRepository personRepository,
+                           CoursesRepository coursesRepository) {
         this.schoolClassRepository = schoolClassRepository;
         this.personRepository = personRepository;
+        this.coursesRepository = coursesRepository;
     }
 
     @RequestMapping(value = "displayClasses", method = RequestMethod.GET)
     public ModelAndView displayClasses(HttpSession session,
                                        @RequestParam(value = "errorMessage",required = false) String errorMessage){
 
-        if(session.getAttribute("classId") != null){
-            session.removeAttribute("classId");
-        }
+        removeSessionAttributes(session, "classId");
+
         List<SchoolClass> classList = schoolClassRepository.findAll();
         ModelAndView mav = new ModelAndView("classes");
         mav.addObject("schoolClass", new SchoolClass());
@@ -60,7 +62,6 @@ public class AdminController {
 
     @RequestMapping(value = "deleteClass", method = RequestMethod.GET)
     public ModelAndView  deleteClass(@RequestParam("classId")  Long classId) {
-        ModelAndView mav = new ModelAndView();
 
           SchoolClass schoolClass = schoolClassRepository.findById(classId).orElseThrow();
           List<Person> person = personRepository.findBySchoolClass(schoolClass);
@@ -72,17 +73,19 @@ public class AdminController {
           }
           schoolClassRepository.deleteById(classId);
 
-          mav.setViewName("redirect:/admin/displayClasses");
-          return mav;
+          return new ModelAndView("redirect:/admin/displayClasses");
+
     }
+
+//    ---------------------------------------------------------------------------------------------------------
 
     @RequestMapping(value = "displayStudents",method = RequestMethod.GET)
     public ModelAndView displayStudent(@RequestParam(value = "classId",required = false) Long id,
                                        HttpSession session,@RequestParam(value = "errorMessage",required = false)
                                            String errorMessage){
-        if(session.getAttribute("classId") == null){
-            session.setAttribute("classId",id);
-        }
+
+        setSessionAttributes(session, "classId",id);
+
         long classId = (long) session.getAttribute("classId");
 
         SchoolClass schoolClass = schoolClassRepository.findById(classId).orElseThrow();
@@ -116,21 +119,127 @@ public class AdminController {
             return mav;
         }
 
-        SchoolClass schoolClass = schoolClassRepository.findById(classId).orElseThrow();
+        SchoolClass schoolClass = schoolClassRepository.findById(classId)
+                .orElseThrow(()->new RuntimeException("Something went wrong. Please try again!"));
         person.setSchoolClass(schoolClass);
         personRepository.save(person);
+        schoolClass.getPersons().add(person);
+        person.setSchoolClass(schoolClass);
         mav.setViewName("redirect:/admin/displayStudents");
         return mav;
     }
 
     @RequestMapping(value = "deleteStudent",method = RequestMethod.GET)
     public ModelAndView deleteStudentFromClass(@RequestParam("personId") long personId) {
-        ModelAndView mav = new ModelAndView();
-        Person person = personRepository.findById(personId).orElseThrow();
+        Person person = personRepository.findById(personId).orElseThrow(
+                ()->new RuntimeException("Something went wrong. Please try again!"));
         person.setSchoolClass(null);
         personRepository.save(person);
-        mav.setViewName("redirect:/admin/displayStudents");
+        return new ModelAndView("redirect:/admin/displayStudents");
+
+    }
+
+//    ---------------------------------------------------------------------------------------------
+
+    @GetMapping("displayCourses")
+    public ModelAndView displayCourses(
+            @RequestParam(value = "errorMessage",required = false) String errorMessage, HttpSession session){
+
+        removeSessionAttributes(session, "courseId");
+
+        List<Courses> coursesList = coursesRepository.findAll();
+        ModelAndView mav = new ModelAndView("courses_secure");
+        mav.addObject("course", new Courses());
+        mav.addObject("coursesList", coursesList);
+        mav.addObject("errorMessage", errorMessage);
         return mav;
     }
+
+    @PostMapping("addNewCourse")
+    public ModelAndView addNewCourse(@ModelAttribute("course") Courses course){
+        ModelAndView mav = new ModelAndView();
+        if(coursesRepository.existsByNameIgnoreCase(course.getName())){
+            String msg = "The Course: "+ course.getName()+" exist in the record!";
+            mav.setViewName("redirect:/admin/displayCourses?errorMessage="+msg);
+            return mav;
+        };
+        coursesRepository.save(course);
+        mav.setViewName("redirect:/admin/displayCourses");
+        return mav;
+    }
+
+// -------------------------------------------------------------------------------------------------------
+
+    @GetMapping(value = "viewStudents")
+    public ModelAndView addStudentToCourse(@RequestParam(value = "courseId",required = false) Long id,
+                                       HttpSession session,@RequestParam(value = "errorMessage",required = false)
+                                       String errorMessage){
+
+        setSessionAttributes(session, "courseId",id);
+
+        long courseId = (long) session.getAttribute("courseId");
+
+        Courses course = coursesRepository.findById(courseId).orElseThrow();
+
+        ModelAndView mav = new ModelAndView("course_students");
+        mav.addObject("courses", course);
+        mav.addObject("person",new Person());
+        mav.addObject("errorMessage", errorMessage);
+        return mav;
+    }
+
+    @PostMapping(value = "addStudentToCourse")
+    public ModelAndView addStudentToCourse(@ModelAttribute("person") Person newPerson,
+                                          HttpSession session){
+        ModelAndView mav = new ModelAndView();
+
+        long courseId = (long) session.getAttribute("courseId");
+
+        Person person = personRepository.findByEmail(newPerson.getEmail());
+        Courses course = coursesRepository.findById(courseId).orElseThrow();
+        if(person == null){
+            String msg = "No student found with email: " +newPerson.getEmail();
+            mav.setViewName("redirect:/admin/viewStudents?errorMessage="+msg);
+            return mav;
+        }
+
+        if(course.getPerson().contains(person)){
+            String msg = "This student already enroll in the course: "+course.getName();
+            mav.setViewName("redirect:/admin/viewStudents?errorMessage="+msg);
+            return mav;
+        }
+
+        person.getCourses().add(course);
+        course.getPerson().add(person);
+        coursesRepository.save(course);
+        personRepository.save(person);
+        mav.setViewName("redirect:/admin/viewStudents");
+        return mav;
+    }
+
+    @GetMapping(value = "deleteStudentFromCourse")
+    public ModelAndView deleteStudentFromCourse(@RequestParam("personId") long personId) {
+        Person person = personRepository.findById(personId).orElseThrow(
+                ()->new RuntimeException("Something went wrong. Please try again!"));
+        person.setCourses(null);
+        personRepository.save(person);
+        return new ModelAndView("redirect:/admin/viewStudents");
+
+    }
+
+
+    private void setSessionAttributes(HttpSession session,String name, Long id){
+        if(session.getAttribute(name) == null){
+            session.setAttribute(name, id);
+        }
+    }
+
+    private void removeSessionAttributes(HttpSession session,String name){
+        if(session.getAttribute(name) != null) {
+            session.removeAttribute(name);
+        }
+    }
+
+
 
 }

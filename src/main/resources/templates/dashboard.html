@@ -42,7 +42,8 @@ Author URL: http://w3layouts.com
     <div class="container py-md-1 py-1">
         <div class="title-main text-center mx-auto mb-md-1 mb-1" style="max-width:500px;">
             <h3 class="title-style" th:text="${'Welcome - ' + username}"></h3>
-            <p class="" th:text="${'You logged in as - ' + authorities}"></p>
+            <p class="" th:text="${'ROLE : ' + authorities}"></p>
+            <p class="" th:text="${'Assigned Class: ' + studentClass}"></p>
         </div>
 
     </div>
@@ -116,6 +117,23 @@ Author URL: http://w3layouts.com
                         </div>
                     </a>
                 </div>
+                <div class="col-sm-6 col-lg-3" sec:authorize="hasAuthority('STUDENT')">
+                    <a th:href="@{/displayCourses}">
+                        <div class="overview-item overview-item--c2">
+                            <div class="overview__inner">
+                                <div class="overview-box clearfix">
+                                    <div class="icon">
+                                        <i class="fas fa-envelope-open-text"></i>
+                                    </div>
+                                    <div class="text">
+                                        <h2>Courses</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
             </div>
         </div>
     </div>

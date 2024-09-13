@@ -11,6 +11,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @EqualsAndHashCode(callSuper = true)
 @Setter @Getter
 @Entity
@@ -60,6 +63,17 @@ public class Person extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY,optional = true)
     @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = true )
     private SchoolClass schoolClass;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @JoinTable(name = "person_courses",
+            joinColumns = {
+               @JoinColumn(name="person_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+               @JoinColumn(name="course_id",referencedColumnName = "id")
+            }
+    )
+    private Set<Courses> courses = new HashSet<>();
 
 
 }

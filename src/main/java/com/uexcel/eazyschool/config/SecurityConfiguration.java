@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/displayMessages").hasAuthority("ADMIN")
                         .requestMatchers("/closeMsg/**").hasAuthority("ADMIN")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/displayCourses").hasAuthority("STUDENT")
                         .requestMatchers("/displayProfile").authenticated()
                         .requestMatchers("/updateProfile").authenticated()
                         .requestMatchers("/dashboard").authenticated()
