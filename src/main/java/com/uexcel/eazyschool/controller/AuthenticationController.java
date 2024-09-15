@@ -61,9 +61,12 @@ public class AuthenticationController {
         } else{
             person = personRepository.findByMobileNumber(username);
         }
-        user.addAttribute("username",person.getName());
+        String name = person.getName().toUpperCase().charAt(0)
+                + person.getName().toUpperCase().substring(1).toLowerCase();
+        person.setName(name);
+        user.addAttribute("username",name);
         user.addAttribute("authorities",person.getRoles().getRoleName());
-        user.addAttribute("studentClass",person.getSchoolClass().getName());
+        user.addAttribute("studentClass",person.getSchoolClass());
         session.setAttribute("loggedInUser",person);
         return "dashboard";
     }

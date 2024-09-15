@@ -77,8 +77,9 @@
             <thead class="table-dark">
             <tr>
                 <th scope="col">Course ID</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Fees</th>
+                <th scope="col">
+                    <a th:href="@{/admin/displayCourses(sortField='name',sortDir=${sortDir})}">Course Name</a></th>
+                <th scope="col"><a th:href="@{/admin/displayCourses(sortField='fees',sortDir=${sortDir})}">Fees</a></th>
                 <th scope="col"></th>
             </tr>
             </thead>

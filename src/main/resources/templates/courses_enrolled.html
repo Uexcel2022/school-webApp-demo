@@ -20,7 +20,7 @@
 <!-- //header -->
 
 <!-- inner banner -->
-<section class="inner-banner py-5">
+<section class="inner-banner py-3">
     <div class="w3l-breadcrumb py-lg-5">
         <div class="container pt-4 pb-sm-4">
             <h4 class="inner-text-title pt-5">Enrolled Courses</h4>
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
             <tr th:each="course: ${person.courses}">
-                <td th:text="${course.courseId}"></td>
+                <td th:text="${course.id}"></td>
                 <td th:text="${course.name}"></td>
                 <td th:text="${course.fees}"></td>
             </tr>

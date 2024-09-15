@@ -4,6 +4,11 @@ import com.uexcel.eazyschool.constants.EazySchoolConstants;
 import com.uexcel.eazyschool.model.Contact;
 import com.uexcel.eazyschool.repository.ContactJpaRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +31,10 @@ public class ContactJpaService {
        return contactJpaRepository.save(contact);
     }
 
-    public List<Contact> findContactMsgWithOpenStatus() {
-        return contactJpaRepository.findContactByStatus(EazySchoolConstants.OPEN);
+    public Page<Contact> findContactMsgWithOpenStatus(int currentPage,String sortField, String sortDirection) {
+        Pageable pageable = PageRequest.of(currentPage -1,5,
+                sortDirection.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
+        return contactJpaRepository.findContactByStatus(EazySchoolConstants.OPEN,pageable);
     }
 
     public void updateMessageStatus(Long id) {

@@ -6,17 +6,15 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -51,16 +49,34 @@ public class ContactJpaController {
         return new ModelAndView("redirect:/contact");
     }
 
-    @RequestMapping(value = "/displayMessages",method = RequestMethod.GET)
-    public ModelAndView getContactMessage(){
-        List<Contact> contactMsgList = contactjpaService.findContactMsgWithOpenStatus();
-        return new ModelAndView("messages", "contactMsgList", contactMsgList);
+    @RequestMapping(value = "/displayMessages/page/{currentPage}",method = RequestMethod.GET)
+    public ModelAndView getContactMessage(@PathVariable("currentPage") int currentPage,
+                                          @RequestParam(value = "sortField",defaultValue = "createdAt") String sortField,
+                                          @RequestParam(value = "sortDir",defaultValue = "dsc") String sortDir){
+        ModelAndView mav = new ModelAndView("messages");
+
+        String sortDirection = sortDir.equals("asc") ? "desc" : "asc";
+
+        Page<Contact> contactMsgs = contactjpaService
+                .findContactMsgWithOpenStatus(currentPage,sortField,sortDirection);
+
+        mav.addObject("currentPage", currentPage);
+        mav.addObject("totalPages", contactMsgs.getTotalPages());
+        mav.addObject("totalMsgs", contactMsgs.getTotalElements());
+        mav.addObject("sortField", sortField);
+        mav.addObject("sortDir", sortDirection);
+        mav.addObject("reverseSortDir", sortDirection);
+        mav.addObject("contactMsgs", contactMsgs.getContent());
+        return mav;
     }
 
     @RequestMapping(value = "/closeMsg", method = RequestMethod.GET)
-    public String updateMessage(@RequestParam Long id){
+    public ModelAndView updateMessage(@RequestParam("id") Long id, @RequestParam("pageNumber")int currentPage,
+                                @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir ){
       contactjpaService.updateMessageStatus(id);
-        return "redirect:/displayMessages";
+      String sortDirection = sortDir.equals("asc") ? "desc" : "asc";
+      String url = String.format("redirect:/displayMessages/page/%s?sortField=%s&sortDir=%s",currentPage,sortField,sortDirection);
+        return  new ModelAndView(url);
     }
 
 }

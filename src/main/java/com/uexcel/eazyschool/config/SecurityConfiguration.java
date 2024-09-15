@@ -28,7 +28,7 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
-                        .requestMatchers("/displayMessages").hasAuthority("ADMIN")
+                        .requestMatchers("/displayMessages/page/**").hasAuthority("ADMIN")
                         .requestMatchers("/closeMsg/**").hasAuthority("ADMIN")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/displayCourses").hasAuthority("STUDENT")

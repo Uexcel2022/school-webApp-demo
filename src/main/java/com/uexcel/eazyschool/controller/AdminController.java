@@ -9,6 +9,7 @@ import com.uexcel.eazyschool.repository.PersonRepository;
 import com.uexcel.eazyschool.repository.SchoolClassRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Controller
@@ -143,15 +145,28 @@ public class AdminController {
 
     @GetMapping("displayCourses")
     public ModelAndView displayCourses(
-            @RequestParam(value = "errorMessage",required = false) String errorMessage, HttpSession session){
+            @RequestParam(value = "errorMessage",required = false) String errorMessage, HttpSession session,
+            @RequestParam(value = "sortField",required = false) String name,
+            @RequestParam(value = "sortDir",defaultValue = "dsc") String sortDir){
 
         removeSessionAttributes(session, "courseId");
 
-        List<Courses> coursesList = coursesRepository.findAll();
+//        List<Courses> coursesList = coursesRepository.findAll(); no soring
+
+        String  sortCurrentDir = sortDir.equals("asc") ? "dsc":"asc";
+
+        List<Courses> coursesList;
+        if(sortCurrentDir.equals("asc") ) {
+            coursesList = coursesRepository.findAll(Sort.by(Objects.requireNonNullElse(name, "name")));
+        }else{
+            coursesList = coursesRepository.findAll(Sort.by(Objects.requireNonNullElse(name, "name")).descending());
+        }
+
         ModelAndView mav = new ModelAndView("courses_secure");
         mav.addObject("course", new Courses());
         mav.addObject("coursesList", coursesList);
         mav.addObject("errorMessage", errorMessage);
+        mav.addObject("sortDir", sortCurrentDir);
         return mav;
     }
 
