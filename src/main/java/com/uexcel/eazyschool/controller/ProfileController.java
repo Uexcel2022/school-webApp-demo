@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@Controller("ProfileBean")
 @Slf4j
+
 public class ProfileController {
     private final PersonRepository personRepository;
     private final PersonService personService;

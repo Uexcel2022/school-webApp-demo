@@ -1,5 +1,6 @@
 package com.uexcel.eazyschool.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uexcel.eazyschool.annotation.FieldsValueMatch;
 import com.uexcel.eazyschool.annotation.PasswordValidator;
 import jakarta.persistence.*;
@@ -39,6 +40,7 @@ public class Person extends BaseEntity{
     private String email;
 
     @Transient  //it indicates to spring to ignore filed for jpa operations
+    @JsonIgnore
     private String confirmEmail;
 
     @Pattern(regexp = "(\\+234[7-9]|0[7-9])[01][0-9]{8}",message = "Invalid phone Nigeria number!")
@@ -47,9 +49,11 @@ public class Person extends BaseEntity{
 
     @Size(min = 6, message = "Password should be up to 6 characters!")
     @PasswordValidator
+    @JsonIgnore
     private String pwd;
 
     @Transient           //it indicates to spring to ignore filed for jpa operations
+    @JsonIgnore
     private String confirmPwd;
 
     @OneToOne( fetch = FetchType.EAGER,targetEntity = Roles.class)

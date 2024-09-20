@@ -1,5 +1,8 @@
 package com.uexcel.eazyschool.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -18,8 +21,10 @@ public class Contact extends BaseEntity {
     private Long id;
     @Pattern(regexp = "[A-Za-z]{2,}[a-zA-z ]{2,30}",
             message = "Name should be at least 2 or at most 30 alphabet characters long.")
+    @JsonProperty("person_name")
     private String name;
-    @Pattern(regexp = "(\\+234[7-9]|0[7-9])[01][0-9]{8}",message = "Invalid phone Nigeria number.")
+    @Pattern(regexp = "(\\+234[7-9]|0[7-9])[01][0-9]{8}",message = "Invalid Nigeria phone number.")
+    @JsonProperty(value = "mobile_number")
     private String mobileNum;
     @Email
     private String email;

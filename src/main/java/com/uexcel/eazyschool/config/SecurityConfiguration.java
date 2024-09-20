@@ -23,9 +23,10 @@ public class SecurityConfiguration {
 
         http.csrf(csrf->csrf.ignoringRequestMatchers("/saveMsg")
                                 .ignoringRequestMatchers("/public/**")
+                                .ignoringRequestMatchers("/api/**")
+                                .ignoringRequestMatchers("/data-api/**")
 //                        .ignoringRequestMatchers(PathRequest.toH2Console())
                 )
-
                 .authorizeHttpRequests(req->req
                         .requestMatchers("**:8080","/","/home").permitAll()
                         .requestMatchers("/displayMessages/page/**").hasAuthority("ADMIN")
@@ -34,8 +35,14 @@ public class SecurityConfiguration {
                         .requestMatchers("/displayCourses").hasAuthority("STUDENT")
                         .requestMatchers("/displayProfile").authenticated()
                         .requestMatchers("/updateProfile").authenticated()
+                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/dashboard").authenticated()
                         .requestMatchers("/about").permitAll()
+                        .requestMatchers("/data-api/**").authenticated() //this for hal and rest profile path refer to properties file
+//                        .requestMatchers("/profile/**").permitAll()
+//                        .requestMatchers("/courseses/**").permitAll() for rest date and hal explorer
+//                        .requestMatchers("/contacts/**").permitAll()
+//                        .requestMatchers("/data-api/**").permitAll()
                         .requestMatchers("/contact").permitAll()
                         .requestMatchers("/courses").permitAll()
                         .requestMatchers("/saveMsg").permitAll()
