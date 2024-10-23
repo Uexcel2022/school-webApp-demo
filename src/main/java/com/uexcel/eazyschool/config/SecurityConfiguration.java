@@ -25,6 +25,7 @@ public class SecurityConfiguration {
                                 .ignoringRequestMatchers("/public/**")
                                 .ignoringRequestMatchers("/api/**")
                                 .ignoringRequestMatchers("/data-api/**")
+                                .ignoringRequestMatchers("/eazyschool/actuator/**")
 //                        .ignoringRequestMatchers(PathRequest.toH2Console())
                 )
                 .authorizeHttpRequests(req->req
@@ -32,6 +33,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/displayMessages/page/**").hasAuthority("ADMIN")
                         .requestMatchers("/closeMsg/**").hasAuthority("ADMIN")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/eazyschool/actuator/**").hasAuthority("ADMIN")
                         .requestMatchers("/displayCourses").hasAuthority("STUDENT")
                         .requestMatchers("/displayProfile").authenticated()
                         .requestMatchers("/updateProfile").authenticated()

@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,15 @@ import org.springframework.web.bind.annotation.*;
 @EnableAspectJAutoProxy
 public class AuthenticationController {
     private final PersonRepository personRepository;
+
+    @Value("${page.size}")
+    private int defaultPageSize;
+
+    @Value("${success.message}")
+    private String message;
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     public AuthenticationController(PersonRepository personRepository) {
@@ -68,6 +79,7 @@ public class AuthenticationController {
         user.addAttribute("authorities",person.getRoles().getRoleName());
         user.addAttribute("studentClass",person.getSchoolClass());
         session.setAttribute("loggedInUser",person);
+        logging();
         return "dashboard";
     }
 
@@ -84,5 +96,22 @@ public class AuthenticationController {
         if(session.getAttribute(name) != null) {
             session.removeAttribute(name);
         }
+    }
+
+    private void logging(){
+        log.info("info message from dashboard page");
+        log.debug("debug message from dashboard page");
+        log.error("Error message from dashboard page");
+        log.warn("warning message from dashboard page");
+        log.trace("trace message from dashboard page");
+
+        log.error("Default page size: {}",defaultPageSize);
+        log.error("success message: {}",message);
+
+        log.error("Environment Default page size: {}", environment.getProperty("page.size"));
+        log.error("Environment success message: {}",environment.getProperty("success.message"));
+        log.error("Java environment variable: {}",environment.getProperty("JAVA_HOME"));
+
+
     }
 }

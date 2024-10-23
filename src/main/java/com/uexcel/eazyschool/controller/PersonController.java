@@ -1,7 +1,6 @@
 package com.uexcel.eazyschool.controller;
 
 import com.uexcel.eazyschool.model.Person;
-import com.uexcel.eazyschool.repository.PersonRepository;
 import com.uexcel.eazyschool.service.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Profile("prod")
-public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
+@Profile("!prod")
+public class UsernameNonPasswordAuthenticationProvider implements AuthenticationProvider {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsernamePasswordAuthenticationProvider(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+    public UsernameNonPasswordAuthenticationProvider(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -44,7 +44,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
             person = personRepository.findByMobileNumber(username);
         }
 
-        if(null != person && person.getId() > 0 && passwordEncoder.matches(password,person.getPwd())) {
+        if(null != person && person.getId() > 0) {
             return new UsernamePasswordAuthenticationToken(username, null,
                     List.of(new GrantedAuthority[]{new SimpleGrantedAuthority(person.getRoles().getRoleName())}));
         }

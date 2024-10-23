@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,7 +59,7 @@ public class Person extends BaseEntity{
     @JoinColumn(name = "role_id", referencedColumnName ="id",nullable = false )
     private Roles roles;
 
-    @OneToOne( fetch = FetchType.EAGER,cascade = CascadeType.PERSIST,targetEntity = Address.class)
+    @OneToOne( fetch = FetchType.EAGER,cascade = CascadeType.PERSIST,targetEntity = Address.class,optional = true )
     @JoinColumn(name = "address_id", referencedColumnName ="id")
     private Address address;
 
